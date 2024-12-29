@@ -15,17 +15,32 @@ CREATE SCHEMA IF NOT EXISTS `LittleLemonDM` DEFAULT CHARACTER SET utf8 ;
 USE `LittleLemonDM` ;
 
 -- -----------------------------------------------------
+-- Table `LittleLemonDM`.`MenuItems`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `LittleLemonDM`.`MenuItems` (
+  `MenuItemsID` VARCHAR(50) NOT NULL,
+  `CourseName` VARCHAR(255) NOT NULL,
+  `StarterName` VARCHAR(255) NOT NULL,
+  `DesertName` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`MenuItemsID`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `LittleLemonDM`.`Menus`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `LittleLemonDM`.`Menus` (
   `MenuID` VARCHAR(100) NOT NULL,
-  `Cuisine` VARCHAR(100) NOT NULL,
-  `starters` VARCHAR(100) NOT NULL,
-  `courses` VARCHAR(100) NOT NULL,
-  `drinks` VARCHAR(100) NOT NULL,
-  `desserts` VARCHAR(100) NOT NULL,
+  `MenuItemsID` VARCHAR(50) NOT NULL,
+  `MenuName` VARCHAR(255) NOT NULL,
   `Price` DECIMAL(10,2) NOT NULL,
-  PRIMARY KEY (`MenuID`))
+  PRIMARY KEY (`MenuID`),
+  INDEX `MenuItemID_idx` (`MenuItemsID` ASC) VISIBLE,
+  CONSTRAINT `MenuItemsID`
+    FOREIGN KEY (`MenuItemsID`)
+    REFERENCES `LittleLemonDM`.`MenuItems` (`MenuItemsID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
@@ -49,9 +64,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `LittleLemonDM`.`Customers` (
   `CustomerID` INT NOT NULL AUTO_INCREMENT,
-  `CustomerFirstName` VARCHAR(100) NOT NULL,
-  `CustomerLastName` VARCHAR(100) NOT NULL,
-  `CustomerPhonenumber` INT NOT NULL,
+  `FullName` VARCHAR(255) NOT NULL,
+  `ContactNumber` INT NOT NULL,
   PRIMARY KEY (`CustomerID`))
 ENGINE = InnoDB;
 
@@ -87,16 +101,16 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `LittleLemonDM`.`Orders` (
   `OrderID` INT NOT NULL AUTO_INCREMENT,
   `TableNo` INT NOT NULL,
-  `BookingID` INT NOT NULL,
+  `CustomerID` INT NOT NULL,
   `MenuID` VARCHAR(100) NOT NULL,
-  `BillAmount` DECIMAL(10,2) NOT NULL,
+  `TotalCost` DECIMAL(10,2) NOT NULL,
   `Quantity` INT NOT NULL,
   PRIMARY KEY (`OrderID`),
-  INDEX `BookingID_idx` (`BookingID` ASC) VISIBLE,
   INDEX `MenuID_idx` (`MenuID` ASC) VISIBLE,
-  CONSTRAINT `BookingID`
-    FOREIGN KEY (`BookingID`)
-    REFERENCES `LittleLemonDM`.`Bookings` (`BookingID`)
+  INDEX `CustomerID_idx` (`CustomerID` ASC) VISIBLE,
+  CONSTRAINT `CustomerID`
+    FOREIGN KEY (`CustomerID`)
+    REFERENCES `LittleLemonDM`.`Customers` (`CustomerID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `MenuID`
