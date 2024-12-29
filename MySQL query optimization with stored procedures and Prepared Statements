@@ -1,0 +1,118 @@
+MySQL query optimization with stored procedures and Prepared Statements
+Introduction
+In this reading, you’ll recap the importance of query optimization. You’ll also recap techniques that can be used to optimize databases, such as stored procedures and prepared statements.
+
+
+Query optimization
+When working with MySQL databases, the response time, or turnaround time, is extremely important. It’s particularly important in terms of how long the database takes to respond to your SQL queries. As data volumes grow, and the data requirements grow increasingly more complex, then performance becomes more important for a better end-user experience.
+
+Database optimization is the best way to reduce database system response time. Response time is the time taken to transmit a query, process it, and transmit the response or information back to the user.  
+
+The performance of a database depends on both the software and the hardware. However, the focus of this reading is on software or database-level performance optimization. At the database level, the structure of the database, and the queries that you execute, play an important role in performance optimization.
+
+As you should know from previous courses, you can optimize database queries using stored procedures and prepared statements. Let’s recap the basics of these techniques.
+
+
+Stored procedures
+When working with a database, you may often want to reuse the same code of SQL statements repeatedly. In this case, you can save your block of code in the form of a stored procedure that you can use whenever needed.
+
+When you build a stored procedure, you need to adhere to the following best practices:
+
+Each procedure must have a unique name.
+
+Each procedure may have zero or many parameters.
+
+Each procedure may contain one or more SQL statements.
+
+Each procedure may contain one or more variable and/or control statements.
+
+
+Stored procedures optimize your code and make it more consistent, reusable and easier to use and maintain.
+
+
+Create a stored procedure
+To create a stored procedure, you must use the CREATE PROCEDURE command, specify the procedure name with the parameters list and create the procedure logic with relevant SQL code. 
+
+The following syntax presents a block of code that represents the basic syntax of a stored procedure:
+
+12
+CREATE PROCEDURE ProcedureName()  
+SELECT statements;
+
+In this syntax, the CREATE PROCEDURE command creates the stored procedure, followed by the procedure name.
+
+The name of the procedure must be followed with a pair of parentheses ( ), which holds the list of parameters. You need to use a pair of parentheses even if you have no parameters in the procedure (in other words, even if the parameter list is empty).
+
+The last part of the procedure contains the logic you want to implement. For example, you might require your procedure to select all data from a table in the database.
+
+
+Stored procedures with multiple parameters
+You can also create a more sophisticated stored procedure with multiple parameters and statements. However, these procedures require additional steps to consider in the development process.
+
+For example, when creating these procedures, you first need to change the delimiter and then use the BEGIN-END keywords to wrap the code in the body of the procedure as follows:
+
+1
+DELIMITER //  
+
+Changing the delimiter enables MySQL to compile the whole block of code in the BEGIN-END section of the stored procedure as one compound statement.
+
+12345
+CREATE PROCEDURE ProcedureName (OUT parameter INT, IN parameter INT)  
+BEGIN   
+SELECT statement1_name;
+SELECT statement2_name;
+END // 
+
+In this example, the two parameters are declared as OUT and IN types, as the intention is input and to output some values.
+
+The logic is implemented within the BEGIN and the END keywords which determines the body of the procedure.    
+
+In this case the two statements were created in the body of the procedure. 
+
+The double forward slashes // indicate the end of the entire query. 
+
+Finally, you can change the delimiter back to the default semicolon so that you can keep using MySQL. 
+
+1
+DELIMITER;
+
+Invoke a stored procedure
+Once you’ve created your stored procedure you need to invoke it. To invoke the stored procedure, you need to use the CALL command followed by the procedure name, as in the following example: 
+
+1
+CALL ProcedureName;
+
+To learn more about procedures, you can review the item 
+Stored procedures in MySQL
+ in the ‘Database Structure and Management in MySQL’ course. You can also review the item 
+Functions and stored procedures in MySQL
+ in the ‘Advanced MySQL Topics’ course.
+
+
+Prepared statements
+A prepared statement is a database optimization technique used to execute database queries faster and more securely. You can also invoke it to reuse the same SQL statements repeatedly. This leads to higher efficiency. 
+
+Creating a prepared statement in MySQL reduces the time it takes to parse a query. The query is parsed once by MySQL regardless of the number of times it is used and executed. 
+
+A prepared statement also minimizes the bandwidth usage when communicating data with a MySQL server. This is because you only need to pass the parameter’s values to the prepared statement, not the whole SQL statement.
+
+It also provides greater database security by preventing the use of database injections to hack your database.
+
+
+Creating a prepared statement
+A prepared statement in MySQL is essentially a template that you create with a SQL statement that includes certain unspecified values which are used as parameters. 
+
+In the following example, these values are labelled with a question mark "?" which represents four parameters that can be inserted into the table:
+
+1
+PREPARE statement_Name 'INSERT INTO table1 VALUES (?, ?, ?, ?)';
+
+Calling a prepared statement
+To call the prepared statement, you need to use the execute command as follows:
+
+1
+EXECUTE statement_name USING @variable;
+To learn more about prepared statements, you can review the item 
+MySQL Prepared Statement
+ in the ‘Advanced MySQL Topics’ course.
+
