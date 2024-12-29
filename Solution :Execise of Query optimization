@@ -1,0 +1,85 @@
+Scenario 
+Little Lemon need to query the data in their database. To do this, they need your help with creating optimized queries using stored procedures and prepared statements.
+
+Prerequisites
+In the previous module, you developed a data model for Little Lemon and implemented it in your MySQL server. Your database should now contain several tables including the following:
+
+Menus, 
+
+Orders, 
+
+MenuItems,
+
+and Customers.
+
+These tables might have different names within your database. However, they should still contain similar data to, and resemble the relationships in, the following diagram:
+
+Diagram of data and relationships
+
+You also need to use MySQL Workbench SQL editor to write the required stored procedures and prepared statements.
+
+
+Task 1
+In this first task, Little Lemon need you to create a procedure that displays the maximum ordered quantity in the Orders table. 
+
+Creating this procedure will allow Little Lemon to reuse the logic implemented in the procedure easily without retyping the same code over again and again to check the maximum quantity. 
+
+You can call the procedure GetMaxQuantity and invoke it as follows:
+
+CALL GetMaxQuantity();
+
+The output result of your query (depending on the data populated in your database) should be similar to the output in the following screenshot: 
+
+Solution:
+CREATE PROCEDURE GetMaxQuantity()
+BEGIN
+    SELECT MAX(Quantity) AS 'Get Max Quantity'
+        FROM Orders;
+end;
+
+CALL GetMaxQuantity();
+
+
+Task 2
+In the second task, Little Lemon need you to help them to create a prepared statement called GetOrderDetail. This prepared statement will help to reduce the parsing time of queries. It will also help to secure the database from SQL injections.
+
+The prepared statement should accept one input argument, the CustomerID value, from a variable. 
+
+The statement should return the order id, the quantity and the order cost from the Orders table. 
+
+Once you create the prepared statement, you can create a variable called id and assign it value of 1. 
+
+Then execute the GetOrderDetail prepared statement using the following syntax:
+
+
+SET @id = 1;
+EXECUTE GetOrderDetail USING @id;
+
+Solution:
+PREPARE GetOrderDetail FROM
+    'SELECT OrderID, Quantity, TotalCost
+        FROM Orders
+        WHERE CustomerID = ?';
+
+SET @id = 1;
+EXECUTE GetOrderDetail USING @id;
+
+
+
+Task 3
+ create a stored procedure called CancelOrder.
+
+Creating this procedure will allow Little Lemon to cancel any order by specifying the order id value in the procedure parameter without typing the entire SQL delete statement.   
+
+If you invoke the CancelOrder procedure, the output result should be similar to the output of the following screenshot:
+
+SOLUTION:
+CREATE PROCEDURE CancelOrder(IN order_id INT)
+BEGIN
+    DELETE FROM Orders
+           WHERE CancelOrder.order_id = Orders.OrderID;
+end;
+
+CALL CancelOrder(3);
+
+
